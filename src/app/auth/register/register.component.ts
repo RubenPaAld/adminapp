@@ -2,14 +2,14 @@ import {Component} from '@angular/core';
 import {AuthService} from '../auth.service';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../app.reducer';
-import {Auth} from '../auth';
+import {AuthPrototype} from '../auth-prototype';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styles: []
 })
-export class RegisterComponent extends Auth{
+export class RegisterComponent extends AuthPrototype{
 
   constructor(public  authService: AuthService,  store: Store<AppState>) {
     super(store);

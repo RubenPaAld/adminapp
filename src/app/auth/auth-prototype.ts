@@ -3,11 +3,11 @@ import {Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../app.reducer';
 
-export class Auth implements OnInit, OnDestroy{
+export class AuthPrototype implements OnInit, OnDestroy{
 
   cargando: boolean;
-  subscription: Subscription;
-  private store: Store<AppState>;
+  subscription: Subscription = new Subscription();
+  store: Store<AppState>;
 
   constructor(store: Store<AppState>) {
     this.store = store;

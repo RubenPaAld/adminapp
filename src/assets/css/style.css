@@ -48,7 +48,7 @@
     + Preview
     + Tables
   * Landing screens
-    + Auth
+    + AuthPrototype
     + Error
 -------------------------------------------------------------------*/
 /*-------------------------------------------------------------------*/
@@ -14926,7 +14926,7 @@ ul {
 
 /*-------------------------------------------------------------------*/
 /* === Landing screens === */
-/* Auth */
+/* AuthPrototype */
 .auth.auth-bg-1 {
   background: url("../images/auth/login_1.jpg");
   background-size: cover; }
