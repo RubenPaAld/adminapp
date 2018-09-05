@@ -7,6 +7,11 @@ import Swal from 'sweetalert2';
 import * as firebase from 'firebase';
 import {map} from 'rxjs/operators';
 import {User} from './user';
+import {Store} from '@ngrx/store';
+import {AppState} from '../app.reducer';
+import {ActivarLoadgingAction, DesactivarLoadgingAction} from '../shared/ui.accions';
+import {SetUserAction} from './auth.actions';
+import {Subscription} from 'rxjs';
 
 
 @Injectable({
@@ -14,17 +19,35 @@ import {User} from './user';
 })
 export class AuthService {
 
-  constructor(private afAuth: AngularFireAuth, private router: Router, private afDB: AngularFirestore) {
-    this.afAuth.auth.useDeviceLanguage();
+  private userSubscription: Subscription = new Subscription();
+
+  constructor(private afAuth: AngularFireAuth, private router: Router, private afDB: AngularFirestore,
+              private store: Store<AppState>) {
   }
 
   initAuthListener() {
     this.afAuth.authState.subscribe( (fireUser: firebase.User) => {
-      console.log(fireUser);
+      if (fireUser) {
+        this.userSubscription = this.afDB.doc(`${fireUser.uid}/usuario`).valueChanges().subscribe((userObj:User) => {
+
+          const user: User = {
+            nombre: userObj.nombre,
+            email: userObj.email,
+            uid: userObj.uid
+          };
+
+          this.store.dispatch(new SetUserAction(user))
+        })
+      } else {
+          this.userSubscription.unsubscribe();
+      }
     });
   }
 
   crearUsuario(nombre: string, email: string, password: string) {
+
+    this.store.dispatch(new ActivarLoadgingAction());
+
     this.afAuth.auth.createUserWithEmailAndPassword(email,password)
       .then(resp => {
 
@@ -35,22 +58,30 @@ export class AuthService {
         this.afDB.doc(`${user.uid}/usuario`)
           .set(user).then(() => {
           this.router.navigate(['/']);
+          this.store.dispatch(new DesactivarLoadgingAction());
         }).catch(err => {
           Swal('Error al crear usuario', err.message, 'error');
+          this.store.dispatch(new DesactivarLoadgingAction());
         });
 
       }).catch( err => {
       Swal('Error al crear usuario', err.message, 'error');
+      this.store.dispatch(new DesactivarLoadgingAction());
     });
-    this.afAuth.auth.useDeviceLanguage();
+
   }
 
   login(email: string, password: string) {
+
+    this.store.dispatch(new ActivarLoadgingAction());
+
     this.afAuth.auth.signInWithEmailAndPassword(email,password)
       .then( resp => {
         this.router.navigate(['/']);
+        this.store.dispatch(new DesactivarLoadgingAction());
       }).catch( err => {
         Swal('Error en el login', err.message, 'error');
+        this.store.dispatch(new DesactivarLoadgingAction());
     });
   }
 
