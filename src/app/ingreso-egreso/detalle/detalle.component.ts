@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AppState} from '../../app.reducer';
+import {AppState} from '../ingreso-egreso.reducer';
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
 import {IngresoEgreso, tiposValidos} from '../ingreso-egreso.model';

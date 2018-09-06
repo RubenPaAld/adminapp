@@ -5,7 +5,7 @@ import {IngresoEgresoService} from './ingreso-egreso.service';
 import Swal from 'sweetalert2';
 import {AuthPrototype} from '../auth/auth-prototype';
 import {Store} from '@ngrx/store';
-import {AppState} from '../app.reducer';
+import {AppState} from './ingreso-egreso.reducer';
 import {ActivarLoadgingAction, DesactivarLoadgingAction} from '../shared/ui.accions';
 
 @Component({
